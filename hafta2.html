@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. Hafta: Sinüzoidal Sürekli Durum Analizi - EEM 221</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* Stone-100 */
+            color: #1c1917; /* Stone-900 */
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        /* Custom Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #d6d3d1;
+            border-radius: 2px;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #d6d3d1; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased">
+
+    <!-- Navigation Overlay -->
+    <div id="sidebar-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 opacity-0"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-4 border-b border-stone-200 flex justify-between items-center bg-stone-50">
+            <h2 class="font-bold text-lg text-stone-800">Ders İçeriği</h2>
+            <button onclick="toggleMenu()" class="p-2 hover:bg-stone-200 rounded-full text-stone-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-2">
+            <a href="index.html" class="block p-3 rounded-lg bg-stone-800 text-white font-bold mb-4 hover:bg-stone-700 transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+                Ders Ana Sayfası
+            </a>
+
+            <a href="hafta1.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
+                <span class="text-xs font-bold text-stone-400 block mb-1">1. HAFTA</span>
+                Sinüzoidler ve Fazör Kavramı
+            </a>
+            
+            <!-- Week 2 (Active) -->
+            <a href="hafta2.html" class="block p-3 rounded-lg bg-blue-50 text-blue-700 font-semibold border border-blue-200 shadow-sm">
+                <span class="text-xs font-bold text-blue-400 block mb-1">2. HAFTA (Aktif)</span>
+                Sinüzoidal Sürekli Durum Analizi
+            </a>
+
+            <!-- Other Weeks -->
+            <a href="hafta3.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
+                <span class="text-xs font-bold text-stone-400 block mb-1">3. HAFTA</span>
+                Güç Analizi I (Aktif/Reaktif)
+            </a>
+            <a href="hafta4.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
+                <span class="text-xs font-bold text-stone-400 block mb-1">4. HAFTA</span>
+                Güç Analizi II (Kompanzasyon)
+            </a>
+            <!-- ... (Other weeks can be added here) ... -->
+        </nav>
+    </aside>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-30">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleMenu()" class="p-2 -ml-2 hover:bg-stone-100 rounded-lg text-stone-700 transition-colors" title="Menü">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="text-xl font-bold text-stone-900 hidden md:block">EEM 211: Devre Analizi II</h1>
+                    <h1 class="text-lg font-bold text-stone-900 md:hidden">EEM 211</h1>
+                    <p class="text-sm text-stone-500">Hafta 2: Sinüzoidal Analiz</p>
+                </div>
+            </div>
+            <a href="index.html" class="text-stone-500 hover:text-blue-600 text-sm font-semibold">Ana Sayfa</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-12 max-w-5xl">
+
+        <!-- 1. Intro & Motivation -->
+        <section class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Kurallar Değişmedi, Oyuncular Değişti</h2>
+            <p class="text-lg text-stone-600 mb-6 leading-relaxed">
+                Geçen hafta zamanı durdurup sinyalleri <strong>Fazör (V, I)</strong>, elemanları ise <strong>Empedans (Z)</strong> haline getirdik. 
+                Güzel haber: Analiz 1'de öğrendiğiniz hiçbir formül çöpe gitmedi!
+            </p>
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1 bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h3 class="font-bold text-green-800 mb-2">✅ Değişmeyenler</h3>
+                    <ul class="list-disc list-inside text-sm text-green-700 space-y-1">
+                        <li>Ohm Kanunu: <i>V = I · Z</i></li>
+                        <li>Kirchhoff Yasaları (KCL & KVL)</li>
+                        <li>Seri/Paralel Eşdeğer Bulma</li>
+                    </ul>
+                </div>
+                <div class="flex-1 bg-orange-50 p-4 rounded-lg border border-orange-200">
+                    <h3 class="font-bold text-orange-800 mb-2">⚠️ Tek Kritik Fark</h3>
+                    <p class="text-sm text-orange-800">
+                        Toplama çıkarma yaparken artık skaler değil, <strong>VEKTÖREL</strong> (Karmaşık Sayı) işlem yapıyoruz.
+                        <br><br>
+                        <span class="font-mono bg-white px-2 py-1 rounded border border-orange-300 font-bold">3 + 4 &ne; 7</span> (Genellikle)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Kirchhoff & Vector Math (Interactive) -->
+        <section class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Kirchhoff ve Vektörel Toplam</h2>
+            <p class="text-stone-600 mb-6">
+                Bir düğüme giren akımların toplamı sıfırdır (KCL). Ancak bu fazör toplamıdır. 
+                Aşağıdaki simülasyonda iki akım vektörünün (<i>I</i><sub>1</sub> ve <i>I</i><sub>2</sub>) toplamının (<i>I</i><sub>top</sub>) 
+                nasıl değiştiğini inceleyin. Açı farkı sonucu nasıl etkiliyor?
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Controls -->
+                <div class="lg:col-span-1 space-y-6 bg-stone-50 p-6 rounded-lg border border-stone-200">
+                    <div>
+                        <label class="block text-sm font-semibold text-stone-700 mb-2">
+                            <i>I</i><sub>1</sub> Genliği: <span id="val-m1" class="text-blue-600">3</span> A
+                        </label>
+                        <input type="range" id="input-m1" min="1" max="10" value="3" step="1" oninput="updateVectors()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-stone-700 mb-2">
+                            <i>I</i><sub>1</sub> Açısı: <span id="val-a1" class="text-blue-600">0</span>&deg;
+                        </label>
+                        <input type="range" id="input-a1" min="0" max="360" value="0" step="15" oninput="updateVectors()">
+                    </div>
+                    <hr class="border-stone-300">
+                    <div>
+                        <label class="block text-sm font-semibold text-stone-700 mb-2">
+                            <i>I</i><sub>2</sub> Genliği: <span id="val-m2" class="text-red-600">4</span> A
+                        </label>
+                        <input type="range" id="input-m2" min="1" max="10" value="4" step="1" oninput="updateVectors()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-stone-700 mb-2">
+                            <i>I</i><sub>2</sub> Açısı: <span id="val-a2" class="text-red-600">90</span>&deg;
+                        </label>
+                        <input type="range" id="input-a2" min="0" max="360" value="90" step="15" oninput="updateVectors()">
+                    </div>
+
+                    <div class="mt-4 p-3 bg-purple-50 border border-purple-200 rounded text-sm text-purple-900">
+                        <strong>Toplam (I<sub>1</sub> + I<sub>2</sub>):</strong><br>
+                        <span id="result-display" class="font-mono text-lg font-bold">5.00 &angle; 53.1&deg; A</span>
+                    </div>
+                </div>
+
+                <!-- Visualization -->
+                <div class="lg:col-span-2 flex flex-col justify-center">
+                    <div class="chart-container">
+                        <canvas id="vectorChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-stone-500 mt-2">Vektörler uç uca eklenerek toplanır (Paralelkenar kuralı).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Impedance & Nodal/Mesh Analysis -->
+        <section class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Düğüm ve Çevre Analizi</h2>
+            <p class="text-stone-600 mb-4">
+                Yöntem aynı, sadece sayılar karmaşık. 
+            </p>
+
+            <!-- Tabs -->
+            <div class="flex space-x-2 mb-6 border-b border-stone-200">
+                <button onclick="switchTab('nodal')" id="tab-nodal" class="px-6 py-2 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">Düğüm (Nodal)</button>
+                <button onclick="switchTab('mesh')" id="tab-mesh" class="px-6 py-2 font-bold text-stone-500 hover:text-blue-600 border-b-2 border-transparent transition-colors">Çevre (Mesh)</button>
+            </div>
+
+            <!-- Content Area -->
+            <div id="method-content" class="bg-stone-50 p-6 rounded-lg border border-stone-200 min-h-[250px]">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- 4. Circuit Theorems & Superposition Warning -->
+        <section class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Devre Teoremleri ve Kritik Uyarı</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Thevenin Explanation -->
+                <div>
+                    <h3 class="text-lg font-bold text-stone-800 mb-3 flex items-center gap-2">
+                        <span class="bg-stone-200 px-2 py-1 rounded text-sm">1</span> Thevenin & Norton
+                    </h3>
+                    <p class="text-stone-600 text-sm mb-4">
+                        Karmaşık bir AC devresini, bir çift uçtan bakıldığında tek bir Kaynak (<i>V<sub>th</sub></i>) ve tek bir Empedans (<i>Z<sub>th</sub></i>) olarak modelleyebiliriz.
+                    </p>
+                    <div class="bg-white border border-stone-300 p-4 rounded-lg flex items-center justify-center gap-4">
+                        <div class="text-center">
+                            <div class="w-16 h-16 border-2 border-stone-400 bg-stone-100 flex items-center justify-center text-xs text-stone-500 rounded">
+                                Karmaşık<br>Devre
+                            </div>
+                        </div>
+                        <div class="text-2xl text-stone-400">&rarr;</div>
+                        <div class="text-center border border-dashed border-blue-300 p-2 rounded bg-blue-50">
+                            <div class="font-bold text-blue-700 text-sm">Thevenin Eşdeğeri</div>
+                            <div class="text-xs text-blue-600 mt-1">V<sub>th</sub> (Seri) Z<sub>th</sub></div>
+                        </div>
+                    </div>
+                    <ul class="mt-4 text-sm list-disc list-inside text-stone-600">
+                        <li><strong>Z<sub>th</sub>:</strong> Kaynakları kapat (V&rarr;Kısa, I&rarr;Açık), eşdeğer empedansı bul.</li>
+                        <li><strong>V<sub>th</sub>:</strong> Uçlar açıkken gerilimi hesapla.</li>
+                    </ul>
+                </div>
+
+                <!-- Superposition Warning -->
+                <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+                    <h3 class="text-lg font-bold text-red-800 mb-3 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        Süperpozisyon Tuzağı!
+                    </h3>
+                    <p class="text-red-800 text-sm font-bold mb-2">Farklı Frekanslı Kaynaklar Asla Fazör Olarak Toplanamaz!</p>
+                    <p class="text-red-700 text-sm mb-4">
+                        Eğer devrede <strong>10V DC</strong> ve <strong>5cos(50t) AC</strong> kaynak varsa:
+                    </p>
+                    <div class="flex items-center gap-4 text-sm">
+                        <div class="line-through text-stone-400">V<sub>top</sub> = 10 + 5&angle;0&deg;</div>
+                        <div class="font-bold text-green-700">DOĞRUSU: v(t) = 10 + 5cos(50t)</div>
+                    </div>
+                    <p class="text-xs text-red-600 mt-4 italic">"Elma ile armut toplanmaz. DC ile AC fazörleri farklı dünyalardadır."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cheat Sheet Box -->
+        <div class="mt-8 bg-stone-800 text-stone-200 p-6 rounded-xl">
+            <h4 class="font-bold text-yellow-400 mb-4 border-b border-stone-600 pb-2">📌 Unutulmayacaklar Kutusu (Hafta 2)</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                <div>
+                    <p class="font-semibold text-white mb-1">Empedans (Z)</p>
+                    <p>R &rarr; R</p>
+                    <p>L &rarr; j&omega;L</p>
+                    <p>C &rarr; 1 / (j&omega;C) = -j / (&omega;C)</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-white mb-1">Yıldız - Üçgen (&Delta; &rarr; Y)</p>
+                    <p class="font-mono text-xs bg-stone-900 p-2 rounded">
+                        Z<sub>a</sub> = (Z<sub>b</sub> · Z<sub>c</sub>) / (Z<sub>a</sub>+Z<sub>b</sub>+Z<sub>c</sub>)
+                    </p>
+                    <p class="text-xs text-stone-400 mt-1">Yan kolların çarpımı / Toplam</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-white mb-1">Kaynak Dönüşümü</p>
+                    <p>Gerilim (V<sub>s</sub>, seri Z) &harr; Akım (I<sub>s</sub>, paralel Z)</p>
+                    <p class="font-mono mt-1">I<sub>s</sub> = V<sub>s</sub> / Z</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-8 mt-12 text-center">
+        <p class="mb-2">EEM 211 - Devre Analizi II</p>
+        <p class="text-xs">Haftaya Hazırlık: Güç Analizi. Hesap makinelerinizi getirmeyi unutmayın.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Sidebar Logic ---
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => { overlay.classList.remove('opacity-0'); }, 10);
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+            }
+        }
+
+        // --- Vector Addition Logic (Chart.js) ---
+        const ctxVec = document.getElementById('vectorChart').getContext('2d');
+        let vectorChart = new Chart(ctxVec, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'I1',
+                        data: [],
+                        borderColor: '#2563eb', // Blue
+                        backgroundColor: '#2563eb',
+                        showLine: true,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'I2 (Uç uca)',
+                        data: [],
+                        borderColor: '#dc2626', // Red
+                        backgroundColor: '#dc2626',
+                        showLine: true,
+                        borderDash: [5, 5], // Dashed to show projection
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Toplam (Resultant)',
+                        data: [],
+                        borderColor: '#9333ea', // Purple
+                        backgroundColor: '#9333ea',
+                        showLine: true,
+                        borderWidth: 3,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { min: -15, max: 15, title: {display: true, text: 'Reel (x)'} },
+                    y: { min: -15, max: 15, title: {display: true, text: 'Sanal (jy)'} }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `(${context.parsed.x.toFixed(2)}, j${context.parsed.y.toFixed(2)})`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function toRad(deg) { return deg * Math.PI / 180; }
+        function toDeg(rad) { return rad * 180 / Math.PI; }
+
+        function updateVectors() {
+            const m1 = parseFloat(document.getElementById('input-m1').value);
+            const a1 = parseFloat(document.getElementById('input-a1').value);
+            const m2 = parseFloat(document.getElementById('input-m2').value);
+            const a2 = parseFloat(document.getElementById('input-a2').value);
+
+            // Update Labels
+            document.getElementById('val-m1').innerText = m1;
+            document.getElementById('val-a1').innerText = a1;
+            document.getElementById('val-m2').innerText = m2;
+            document.getElementById('val-a2').innerText = a2;
+
+            // Calc Coordinates
+            const x1 = m1 * Math.cos(toRad(a1));
+            const y1 = m1 * Math.sin(toRad(a1));
+
+            const x2 = m2 * Math.cos(toRad(a2));
+            const y2 = m2 * Math.sin(toRad(a2));
+
+            const xSum = x1 + x2;
+            const ySum = y1 + y2;
+
+            // Resultant Magnitude & Angle
+            const mSum = Math.sqrt(xSum*xSum + ySum*ySum);
+            let aSum = toDeg(Math.atan2(ySum, xSum));
+
+            document.getElementById('result-display').innerHTML = `${mSum.toFixed(2)} &angle; ${aSum.toFixed(1)}&deg; A`;
+
+            // Update Chart Data
+            // I1: Origin -> (x1, y1)
+            vectorChart.data.datasets[0].data = [{x:0, y:0}, {x:x1, y:y1}];
+            
+            // I2 (Head-to-tail): (x1, y1) -> (xSum, ySum)
+            vectorChart.data.datasets[1].data = [{x:x1, y:y1}, {x:xSum, y:ySum}];
+
+            // Resultant: Origin -> (xSum, ySum)
+            vectorChart.data.datasets[2].data = [{x:0, y:0}, {x:xSum, y:ySum}];
+
+            vectorChart.update();
+        }
+
+        // --- Tabs Logic for Nodal/Mesh ---
+        const methodContent = {
+            'nodal': `
+                <div class="space-y-4 animate-fade-in">
+                    <h3 class="text-xl font-bold text-blue-700">Düğüm Gerilimleri (Nodal Analysis)</h3>
+                    <p class="text-stone-700"><strong>Amaç:</strong> Düğümlerdeki bilinmeyen gerilimleri bulmak.</p>
+                    <p class="text-stone-600 text-sm">Bölme işlemiyle uğraşmak zordur (1/Z). Bu yüzden <strong>Admitans (Y = 1/Z)</strong> kullanmak işi çok hızlandırır.</p>
+                    
+                    <div class="bg-white p-4 border-l-4 border-blue-500 shadow-sm">
+                        <h4 class="font-bold text-stone-800 mb-2">Adımlar:</h4>
+                        <ol class="list-decimal list-inside text-stone-600 space-y-1">
+                            <li>Tüm empedansları (Z) Admitansa (Y) çevir.</li>
+                            <li>KCL yaz: Giren Akımlar = Çıkan Akımlar.</li>
+                            <li>Denklem: <i>I<sub>kaynak</sub> = V<sub>1</sub>(Y<sub>1</sub> + Y<sub>2</sub> + ...)</i></li>
+                        </ol>
+                    </div>
+                    <div class="p-3 bg-blue-100 text-blue-800 rounded text-sm font-mono mt-2">
+                        Örnek Denklem: 10&angle;0 = V1 (0.5 - j0.25 + 0.2 + j0.4)
+                    </div>
+                </div>
+            `,
+            'mesh': `
+                <div class="space-y-4 animate-fade-in">
+                    <h3 class="text-xl font-bold text-stone-700">Çevre Akımları (Mesh Analysis)</h3>
+                    <p class="text-stone-700"><strong>Amaç:</strong> Gözlerdeki (Mesh) akımları bulmak.</p>
+                    <p class="text-stone-600 text-sm">Burada doğrudan <strong>Empedans (Z)</strong> ile çalışırız. Matris kurmak çok pratiktir.</p>
+                    
+                    <div class="bg-white p-4 border-l-4 border-stone-500 shadow-sm">
+                        <h4 class="font-bold text-stone-800 mb-2">Gözle Çözüm Tekniği (Matris):</h4>
+                        <ul class="list-disc list-inside text-stone-600 space-y-1">
+                            <li><strong>Köşegenler:</strong> O gözdeki toplam empedans (Pozitif).</li>
+                            <li><strong>Diğerleri:</strong> Ortak kol empedansı (Negatif).</li>
+                            <li><strong>Eşitliğin Sağı:</strong> O gözdeki voltaj kaynaklarının toplamı.</li>
+                        </ul>
+                    </div>
+                    <div class="p-3 bg-stone-200 text-stone-800 rounded text-sm font-mono mt-2">
+                        [ Z11  -Z12 ] [ I1 ] = [ V1 ]<br>
+                        [ -Z21  Z22 ] [ I2 ] = [ V2 ]
+                    </div>
+                </div>
+            `
+        };
+
+        function switchTab(tab) {
+            document.getElementById('method-content').innerHTML = methodContent[tab];
+            
+            // Toggle styles
+            const btnNodal = document.getElementById('tab-nodal');
+            const btnMesh = document.getElementById('tab-mesh');
+            
+            if(tab === 'nodal') {
+                btnNodal.className = "px-6 py-2 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors";
+                btnMesh.className = "px-6 py-2 font-bold text-stone-500 hover:text-blue-600 border-b-2 border-transparent transition-colors";
+            } else {
+                btnMesh.className = "px-6 py-2 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors";
+                btnNodal.className = "px-6 py-2 font-bold text-stone-500 hover:text-blue-600 border-b-2 border-transparent transition-colors";
+            }
+        }
+
+        // Initialize
+        updateVectors();
+        switchTab('nodal');
+
+    </script>
+</body>
+</html>
