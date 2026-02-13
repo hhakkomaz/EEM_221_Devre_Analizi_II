@@ -14,15 +14,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- MathJax for LaTeX Rendering (FIXED: Added this block) -->
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <!-- NOT: MathJax kaldırıldı. Artık formüller HTML/Unicode ile doğal olarak gösterilecek. -->
 
     <style>
         body {
@@ -202,7 +194,6 @@
     <main class="container mx-auto px-4 py-8 space-y-12 max-w-5xl">
 
         <!-- 1. Introduction & Motivation -->
-        <!-- Visualization & Content Choices: Textual comparison cards to explain the shift from DC to AC. Simple, readable layout to set the stage. -->
         <section id="intro" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
             <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Dersin Amacı ve Motivasyon</h2>
             <p class="text-lg text-stone-600 mb-6 leading-relaxed">
@@ -230,16 +221,11 @@
         </section>
 
         <!-- 2. Sinusoid Anatomy (Interactive) -->
-        <!-- Visualization & Content Choices: Interactive Line Chart using Chart.js.
-             Goal: Allow students to manipulate Vm, w, and phi to visualize the equation v(t) = Vm cos(wt + phi).
-             Justification: Static board drawings make it hard to understand "Phase Shift". Sliders provide immediate feedback.
-             Note: Uses a cosine wave as requested (Engineering reference).
-        -->
         <section id="sinusoid-anatomy" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
             <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Sinüzoidin Anatomisi</h2>
             <p class="text-stone-600 mb-6">
                 Mühendislikte referansımız <strong>Kosinüs</strong> dalgasıdır. Aşağıdaki simülasyonu kullanarak 
-                $v(t) = V_m \cos(\omega t + \phi)$ formülündeki parametrelerin dalgayı nasıl değiştirdiğini gözlemleyin.
+                <span class="font-mono bg-stone-100 px-1 rounded"><i>v(t)</i> = <i>V</i><sub>m</sub> cos(<i>&omega;t</i> + <i>&phi;</i>)</span> formülündeki parametrelerin dalgayı nasıl değiştirdiğini gözlemleyin.
             </p>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -247,7 +233,7 @@
                 <div class="lg:col-span-1 space-y-6 bg-stone-50 p-6 rounded-lg border border-stone-200">
                     <div>
                         <label class="block text-sm font-semibold text-stone-700 mb-2">
-                            $V_m$ (Genlik): <span id="val-vm" class="text-blue-600">10</span> V
+                            <i>V</i><sub>m</sub> (Genlik): <span id="val-vm" class="text-blue-600">10</span> V
                         </label>
                         <input type="range" id="input-vm" min="1" max="20" value="10" step="1" oninput="updateSinusoid()">
                         <p class="text-xs text-stone-500 mt-1">Tepe noktası ile sıfır ekseni arası.</p>
@@ -255,15 +241,15 @@
 
                     <div>
                         <label class="block text-sm font-semibold text-stone-700 mb-2">
-                            $\omega$ (Açısal Frekans): <span id="val-w" class="text-blue-600">1</span> rad/s
+                            <i>&omega;</i> (Açısal Frekans): <span id="val-w" class="text-blue-600">1</span> rad/s
                         </label>
                         <input type="range" id="input-w" min="0.5" max="5" value="1" step="0.1" oninput="updateSinusoid()">
-                        <p class="text-xs text-stone-500 mt-1">Dalganın hızı ($\omega = 2\pi f$).</p>
+                        <p class="text-xs text-stone-500 mt-1">Dalganın hızı (<i>&omega;</i> = 2<i>&pi;f</i>).</p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-stone-700 mb-2">
-                            $\phi$ (Faz Açısı): <span id="val-phi" class="text-blue-600">0</span>&deg;
+                            <i>&phi;</i> (Faz Açısı): <span id="val-phi" class="text-blue-600">0</span>&deg;
                         </label>
                         <input type="range" id="input-phi" min="-180" max="180" value="0" step="15" oninput="updateSinusoid()">
                         <p class="text-xs text-stone-500 mt-1">
@@ -294,23 +280,19 @@
                     <div>
                         <p class="font-semibold text-white">Fazör Biletiniz: KOSİNÜS</p>
                         <p class="mt-1">Sinüs gelirse dönüştürün:</p>
-                        <code class="block bg-stone-900 p-2 mt-1 rounded text-green-400">sin(ωt) = cos(ωt - 90°)</code>
+                        <code class="block bg-stone-900 p-2 mt-1 rounded text-green-400">sin(&omega;t) = cos(&omega;t - 90°)</code>
                         <p class="text-xs text-stone-400 mt-1">"Sinüs, Kosinüs'ün 90 derece gerisinden gelir."</p>
                     </div>
                     <div>
                         <p class="font-semibold text-white">İşaret Dönüşümleri:</p>
-                        <code class="block bg-stone-900 p-2 mt-1 rounded text-yellow-200">-cos(ωt) = cos(ωt ± 180°)</code>
-                        <code class="block bg-stone-900 p-2 mt-1 rounded text-yellow-200">-sin(ωt) = cos(ωt + 90°)</code>
+                        <code class="block bg-stone-900 p-2 mt-1 rounded text-yellow-200">-cos(&omega;t) = cos(&omega;t ± 180°)</code>
+                        <code class="block bg-stone-900 p-2 mt-1 rounded text-yellow-200">-sin(&omega;t) = cos(&omega;t + 90°)</code>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 3. Lead/Lag Concept -->
-        <!-- Visualization & Content Choices: Dual Line Chart.
-             Goal: Compare two waves to teach "Lead" vs "Lag".
-             Interaction: Slider changes phase of Current relative to Voltage.
-        -->
         <section id="lead-lag" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
             <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Faz Farkı: Lead / Lag</h2>
             <p class="text-stone-600 mb-6">
@@ -322,7 +304,7 @@
             <div class="flex flex-col md:flex-row gap-8 items-center">
                 <div class="w-full md:w-1/3 space-y-4">
                     <label class="block text-sm font-semibold text-stone-700">
-                        Akım Faz Farkı ($\theta_i$): <span id="val-lag" class="text-red-600">-30</span>&deg;
+                        Akım Faz Farkı (<i>&theta;</i><sub>i</sub>): <span id="val-lag" class="text-red-600">-30</span>&deg;
                     </label>
                     <input type="range" id="input-lag" min="-180" max="180" value="-30" step="15" oninput="updateLeadLag()">
                     
@@ -343,14 +325,10 @@
         </section>
 
         <!-- 4. Phasor Transformation (Math Core) -->
-        <!-- Visualization & Content Choices: Scatter Plot on Cartesian Plane.
-             Goal: Visualize Euler's identity. Mapping Time Domain -> Phasor Domain.
-             Interaction: Toggle between Polar and Rectangular forms using JS logic.
-        -->
         <section id="phasors" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
             <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Karmaşık Sayılar ve Fazörün Doğuşu</h2>
             <p class="text-stone-600 mb-6">
-                Euler formülü ($e^{j\theta} = \cos\theta + j\sin\theta$) sayesinde zamanı ($t$) denklemden atıp sadece 
+                Euler formülü (<span class="font-mono bg-stone-100 px-1 rounded"><i>e</i><sup>j&theta;</sup> = cos&theta; + j sin&theta;</span>) sayesinde zamanı (<i>t</i>) denklemden atıp sadece 
                 <strong>Genlik</strong> ve <strong>Açı</strong> ile çalışabiliriz. Buna <strong>Fazör</strong> denir.
             </p>
 
@@ -359,14 +337,14 @@
                 <div class="space-y-6">
                     <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
                         <h4 class="font-bold text-blue-900">Zaman Domeni</h4>
-                        <p class="font-mono text-lg text-stone-800 mt-2">v(t) = V_m cos(ωt + ϕ)</p>
+                        <p class="font-mono text-lg text-stone-800 mt-2">v(t) = V<sub>m</sub> cos(&omega;t + &phi;)</p>
                     </div>
                     
                     <div class="flex justify-center text-3xl text-stone-400">⬇️</div>
 
                     <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
                         <h4 class="font-bold text-green-900">Fazör Domeni (Kutupsal)</h4>
-                        <p class="font-mono text-lg text-stone-800 mt-2">V = V_m ∠ ϕ</p>
+                        <p class="font-mono text-lg text-stone-800 mt-2"><b>V</b> = V<sub>m</sub> ∠ &phi;</p>
                         <p class="text-xs text-stone-500 mt-1">t ve cos gitti, sadece genlik ve açı kaldı.</p>
                     </div>
 
@@ -383,7 +361,7 @@
                         <canvas id="phasorChart"></canvas>
                     </div>
                     <div class="mt-4 w-full px-4">
-                        <label class="text-sm font-semibold text-stone-700">Fazör Açısı ($\phi$)</label>
+                        <label class="text-sm font-semibold text-stone-700">Fazör Açısı (<i>&phi;</i>)</label>
                         <input type="range" id="input-phasor-angle" min="0" max="360" value="45" step="5" oninput="updatePhasorDiagram()">
                     </div>
                 </div>
@@ -391,17 +369,12 @@
             
             <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-900">
                 <strong>Fazörün Gücü (Türev Alma):</strong><br>
-                Zaman domeninde türev almak ($\frac{d}{dt}$), fazör dünyasında sadece <strong>$j\omega$</strong> ile çarpmak demektir!<br>
+                Zaman domeninde türev almak (<i>d/dt</i>), fazör dünyasında sadece <strong><i>j&omega;</i></strong> ile çarpmak demektir!<br>
                 Bu özellik sayesinde diferansiyel denklemler basit cebirsel denklemlere dönüşür.
             </div>
         </section>
 
         <!-- 5. Passive Components (R, L, C) Lab -->
-        <!-- Visualization & Content Choices: Tabbed Interface.
-             Goal: Show how R, L, and C behave differently in AC.
-             Interaction: Clicking tabs updates the content and the phase description dynamically.
-             Justification: Groups related info (Time eq, Phasor eq, Impedance, Phase shift) per component.
-        -->
         <section id="components" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
             <h2 class="text-2xl font-bold mb-4 text-blue-800 border-l-4 border-blue-600 pl-3">Pasif Elemanların Fazör İlişkileri</h2>
             <p class="text-stone-600 mb-6">
@@ -443,13 +416,13 @@
                     <tr class="border-b hover:bg-stone-50">
                         <td class="p-3 font-bold">L (Bobin)</td>
                         <td class="p-3 font-mono">v = L(di/dt)</td>
-                        <td class="p-3 font-mono">Z = jωL</td>
+                        <td class="p-3 font-mono">Z = j&omega;L</td>
                         <td class="p-3">Voltaj 90° önde (+j)</td>
                     </tr>
                     <tr>
                         <td class="p-3 font-bold">C (Kapasitör)</td>
                         <td class="p-3 font-mono">i = C(dv/dt)</td>
-                        <td class="p-3 font-mono">Z = 1/(jωC)</td>
+                        <td class="p-3 font-mono">Z = 1/(j&omega;C)</td>
                         <td class="p-3">Akım 90° önde (-j)</td>
                     </tr>
                 </tbody>
@@ -547,7 +520,7 @@
             document.getElementById('val-vm').innerText = Vm;
             document.getElementById('val-w').innerText = w;
             document.getElementById('val-phi').innerText = phi;
-            document.getElementById('equation-display').innerText = `v(t) = ${Vm} cos(${w}t + ${phi}°)`;
+            document.getElementById('equation-display').innerHTML = `v(t) = ${Vm} cos(${w}t + ${phi}°)`;
 
             // Update Chart
             const data = generateSinData(Vm, w, phi);
@@ -738,10 +711,11 @@
             });
 
             // Content Injection
+            // Fixed: Replaced jω with j&omega;
             const html = `
                 <div class="space-y-4">
                     <h3 class="text-xl font-bold text-stone-800">${data.title}</h3>
-                    <p class="text-stone-600">${data.desc}</p>
+                    <p class="text-stone-600">${data.desc.replace('jω', 'j&omega;')}</p>
                     <div class="bg-stone-50 p-4 rounded border-l-4 ${data.color}">
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
@@ -750,11 +724,11 @@
                             </div>
                             <div>
                                 <span class="block text-stone-500 font-bold">Fazör:</span>
-                                <span class="font-mono text-stone-800">${data.phasorEq}</span>
+                                <span class="font-mono text-stone-800">${data.phasorEq.replace('jω', 'j&omega;').replace('ωC', '&omega;C')}</span>
                             </div>
                             <div class="col-span-2 mt-2 pt-2 border-t border-stone-200">
                                 <span class="block text-stone-500 font-bold">Empedans (Z):</span>
-                                <span class="font-mono text-lg font-bold text-blue-700">${data.z}</span>
+                                <span class="font-mono text-lg font-bold text-blue-700">${data.z.replace('jω', 'j&omega;').replace('ωC', '&omega;C')}</span>
                             </div>
                         </div>
                     </div>
