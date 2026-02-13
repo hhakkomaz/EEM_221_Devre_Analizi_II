@@ -57,6 +57,24 @@
         
         .sidebar-scroll::-webkit-scrollbar { width: 6px; }
         .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #d6d3d1; border-radius: 3px; }
+
+        /* Quiz Styles */
+        .option-btn {
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #e7e5e4;
+        }
+        .option-btn.correct {
+            background-color: #dcfce7; /* Green-100 */
+            border-color: #22c55e; /* Green-500 */
+            color: #14532d;
+        }
+        .option-btn.wrong {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #ef4444; /* Red-500 */
+            color: #7f1d1d;
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 antialiased">
@@ -92,6 +110,13 @@
             <a href="hafta2.html" class="block p-3 rounded-lg bg-blue-50 text-blue-700 font-semibold border border-blue-200 shadow-sm">
                 <span class="text-xs font-bold text-blue-400 block mb-1">2. HAFTA (Aktif)</span>
                 Sinüzoidal Sürekli Durum Analizi
+            </a>
+            <!-- Quiz Link -->
+            <a href="#quiz" onclick="toggleMenu()" class="block ml-4 p-2 rounded-lg text-sm text-stone-600 hover:text-blue-600 hover:bg-stone-100 transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                Çalışma Soruları (Quiz)
             </a>
 
             <!-- Other Weeks -->
@@ -303,6 +328,67 @@
             </div>
         </div>
 
+        <!-- Quiz Section (Added New) -->
+        <section id="quiz" class="bg-white rounded-xl shadow-lg p-6 md:p-8 mt-12 mb-12">
+            <div class="flex items-center gap-3 mb-6 border-b border-stone-200 pb-4">
+                <div class="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-800">Çalışma Soruları</h2>
+                    <p class="text-sm text-stone-500">Konuyu ne kadar anladığınızı test edin.</p>
+                </div>
+            </div>
+
+            <div id="quiz-container" class="max-w-2xl mx-auto">
+                <!-- Progress -->
+                <div class="flex justify-between text-sm font-medium text-stone-500 mb-2">
+                    <span id="question-counter">Soru 1 / 10</span>
+                    <span id="score-counter">Puan: 0</span>
+                </div>
+                <div class="w-full bg-stone-200 rounded-full h-2 mb-6">
+                    <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="bg-stone-50 p-6 rounded-xl border border-stone-200 mb-6">
+                    <h3 id="question-text" class="text-lg font-bold text-stone-800 mb-4 leading-relaxed">
+                        <!-- Soru buraya gelecek -->
+                    </h3>
+                    
+                    <!-- Hint -->
+                    <div id="hint-box" class="hidden mb-4 p-3 bg-yellow-50 text-yellow-800 text-sm rounded border border-yellow-200">
+                        <span class="font-bold">İpucu:</span> <span id="hint-text"></span>
+                    </div>
+
+                    <!-- Options -->
+                    <div id="options-container" class="space-y-3">
+                        <!-- Şıklar buraya gelecek -->
+                    </div>
+                </div>
+
+                <!-- Feedback (Hidden by default) -->
+                <div id="feedback-container" class="hidden p-4 rounded-lg mb-6 border">
+                    <h4 id="feedback-title" class="font-bold mb-1"></h4>
+                    <p id="feedback-text" class="text-sm"></p>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex justify-between items-center">
+                    <button id="hint-btn" onclick="toggleHint()" class="text-sm text-yellow-600 hover:text-yellow-700 font-medium flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        İpucu Göster
+                    </button>
+                    <div class="flex gap-3">
+                        <button id="prev-btn" onclick="changeQuestion(-1)" class="px-4 py-2 text-stone-600 hover:bg-stone-100 rounded disabled:opacity-50" disabled>Önceki</button>
+                        <button id="next-btn" onclick="changeQuestion(1)" class="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-bold disabled:opacity-50">Sonraki</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="bg-stone-900 text-stone-400 py-8 mt-12 text-center">
@@ -483,9 +569,198 @@
             }
         }
 
+        // --- 5. Quiz Logic ---
+        const quizData = [
+            {
+                q: "AC devrelerde Kirchhoff Akımlar Yasası (KCL) uygulanırken akımlar nasıl toplanır?",
+                hint: "AC devrede akımlar sadece genlik değildir, açıları da vardır.",
+                options: [
+                    { t: "Skaler (Büyüklük) olarak toplanır (I1 + I2)", r: "Yanlış. Bu sadece DC veya aynı fazdaki AC için geçerlidir.", c: false },
+                    { t: "Vektörel (Karmaşık Sayı) olarak toplanır", r: "Doğru. Genlik ve açı dikkate alınarak toplama yapılır.", c: true },
+                    { t: "KCL, AC devrelerde geçerli değildir", r: "Yanlış. KCL ve KVL her zaman geçerlidir.", c: false },
+                    { t: "Akımların kareleri toplanır", r: "Bu görünür güç veya RMS hesabıyla ilgili olabilir, KCL ile değil.", c: false }
+                ]
+            },
+            {
+                q: "Z1 = 3 + j4 ve Z2 = 3 - j4 olan iki empedans SERİ bağlanırsa eşdeğer empedans ne olur?",
+                hint: "Seri bağlantıda empedanslar doğrudan toplanır: Zes = Z1 + Z2.",
+                options: [
+                    { t: "6 + j8", r: "Sanal kısımlar (j4 ve -j4) birbirini götürür.", c: false },
+                    { t: "6", r: "Doğru. (3+j4) + (3-j4) = 6.", c: true },
+                    { t: "5", r: "Büyüklük hesabı değil, karmaşık toplama yapılmalıdır.", c: false },
+                    { t: "0", r: "Reel kısımlar toplanır, sıfır olmaz.", c: false }
+                ]
+            },
+            {
+                q: "Düğüm Gerilimleri Yöntemi (Nodal Analysis) kullanırken denklemlerde hangi büyüklüğü kullanmak işlemi kolaylaştırır?",
+                hint: "Düğüm denkleminde akımları toplarız (I = V/Z). Bölme yerine çarpma yapmak için ne kullanırız?",
+                options: [
+                    { t: "Empedans (Z)", r: "Empedans kullanmak V/Z bölmesi gerektirir, işlem uzar.", c: false },
+                    { t: "Admitans (Y)", r: "Doğru. I = V*Y olduğu için matris kurmak daha kolaydır.", c: true },
+                    { t: "Reaktans (X)", r: "Reaktans empedansın sadece sanal kısmıdır.", c: false },
+                    { t: "Güç (P)", r: "Güç analizi için kullanılır, devre çözümü için değil.", c: false }
+                ]
+            },
+            {
+                q: "Çevre Akımları (Mesh Analysis) yönteminde matrisin KÖŞEGEN elemanlarına (Z11, Z22...) ne yazılır?",
+                hint: "Gözle çözüm tekniğini hatırlayın.",
+                options: [
+                    { t: "O gözdeki kaynakların toplamı", r: "Bu eşitliğin sağ tarafına yazılır.", c: false },
+                    { t: "O gözdeki elemanların toplam empedansı", r: "Doğru. Köşegenlere o çevreye ait toplam empedans yazılır.", c: true },
+                    { t: "Ortak kolun empedansı", r: "Bu köşegen dışı elemanlara (Z12, Z21) yazılır.", c: false },
+                    { t: "Sadece dirençlerin toplamı", r: "Bobin ve kapasitörler de dahil edilmelidir.", c: false }
+                ]
+            },
+            {
+                q: "Süperpozisyon Teoremi uygulanırken, FARKLI FREKANSLI iki kaynağın (örn: DC ve AC) etkisi nasıl toplanır?",
+                hint: "Fazörler sadece aynı frekansta anlamlıdır.",
+                options: [
+                    { t: "Fazör olarak doğrudan toplanır", r: "Yanlış! Farklı frekanslı fazörler toplanamaz.", c: false },
+                    { t: "Sadece genlikleri toplanır", r: "Yanlış. Açı ve zaman farkı önemlidir.", c: false },
+                    { t: "Zaman domenindeki karşılıkları toplanır (v(t) = v1(t) + v2(t))", r: "Doğru. Her biri ayrı çözülür, zaman domenine dönülüp toplanır.", c: true },
+                    { t: "Büyük olan kaynak dikkate alınır", r: "Yanlış. Küçük kaynaklar da sonucu etkiler.", c: false }
+                ]
+            },
+            {
+                q: "Bir devrenin Thevenin Eşdeğeri (Zth) bulunurken bağımsız kaynaklar ne yapılır?",
+                hint: "Devreyi 'öldürmek' için kaynakları etkisiz hale getirin.",
+                options: [
+                    { t: "Hepsi açık devre yapılır", r: "Gerilim kaynakları için yanlıştır.", c: false },
+                    { t: "Hepsi kısa devre yapılır", r: "Akım kaynakları için yanlıştır.", c: false },
+                    { t: "Gerilim kaynakları kısa devre, Akım kaynakları açık devre", r: "Doğru. V=0 (Kısa), I=0 (Açık).", c: true },
+                    { t: "Kaynaklar olduğu gibi bırakılır", r: "Bu durumda eşdeğer direnç bulunamaz.", c: false }
+                ]
+            },
+            {
+                q: "Bir gerilim kaynağı (Vs) ve ona SERİ bağlı bir empedans (Zs), kaynak dönüşümü ile neye dönüşür?",
+                hint: "Kaynak dönüşümü: V-Seri -> I-Paralel.",
+                options: [
+                    { t: "Akım kaynağı (Is) ve ona SERİ empedans", r: "Akım kaynağına seri empedans anlamsızdır (idealde).", c: false },
+                    { t: "Akım kaynağı (Is) ve ona PARALEL empedans", r: "Doğru. Is = Vs/Zs olur.", c: true },
+                    { t: "Sadece Akım kaynağı (Is)", r: "Empedans kaybolmaz.", c: false },
+                    { t: "Dönüşüm yapılamaz", r: "Yapılabilir.", c: false }
+                ]
+            },
+            {
+                q: "Yıldız (Y) bağlantıdan Üçgen ($\Delta$) bağlantıya geçerken empedans değerleri genellikle ne olur?",
+                hint: "Formül: Za = (Z1Z2 + Z2Z3 + Z3Z1) / Z1. Payda daha küçük olabilir.",
+                options: [
+                    { t: "Değişmez", r: "Sadece özel durumlarda aynı kalabilir, genelde değişir.", c: false },
+                    { t: "Genellikle artar (3 katına çıkar)", r: "Doğru. Eşit dirençlerde R_delta = 3 * R_yıldız olur.", c: true },
+                    { t: "Genellikle azalır", r: "Bu Üçgen -> Yıldız dönüşümü için geçerlidir.", c: false },
+                    { t: "Sıfır olur", r: "Yanlış.", c: false }
+                ]
+            },
+            {
+                q: "Bir devrede sadece L ve C elemanları paralel bağlıysa ve Z_L = j10, Z_C = -j10 ise eşdeğer empedans nedir?",
+                hint: "Paralel: (Z1 * Z2) / (Z1 + Z2). Paydaya dikkat!",
+                options: [
+                    { t: "0", r: "Payda sıfır olur (j10 - j10 = 0), sonuç sıfır olmaz.", c: false },
+                    { t: "Sonsuz (Açık Devre)", r: "Doğru. Paralel rezonans durumudur. Payda 0 olduğu için Z sonsuza gider.", c: true },
+                    { t: "j20", r: "Seri olsaydı 0 olurdu.", c: false },
+                    { t: "1", r: "Yanlış.", c: false }
+                ]
+            },
+            {
+                q: "Norton Eşdeğer devresi aşağıdakilerden hangisidir?",
+                hint: "Thevenin'in ikiz kardeşidir.",
+                options: [
+                    { t: "Bir Gerilim Kaynağı ve Seri Empedans", r: "Bu Thevenin eşdeğeridir.", c: false },
+                    { t: "Bir Akım Kaynağı ve Seri Empedans", r: "Yanlış yapı.", c: false },
+                    { t: "Bir Akım Kaynağı ve Paralel Empedans", r: "Doğru. I_N ve paralel Z_N (Z_th).", c: true },
+                    { t: "Sadece Empedans", r: "Kaynak olmalıdır.", c: false }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+
+        function loadQuestion(index) {
+            const q = quizData[index];
+            document.getElementById('question-text').innerHTML = q.q;
+            document.getElementById('hint-text').innerHTML = q.hint;
+            document.getElementById('question-counter').innerText = `Soru ${index + 1} / ${quizData.length}`;
+            document.getElementById('score-counter').innerText = `Puan: ${score}`;
+            document.getElementById('progress-bar').style.width = `${((index + 1) / quizData.length) * 100}%`;
+            
+            // Reset UI
+            document.getElementById('hint-box').classList.add('hidden');
+            document.getElementById('feedback-container').classList.add('hidden');
+            document.getElementById('hint-btn').style.display = 'flex';
+            
+            // Options
+            const optsDiv = document.getElementById('options-container');
+            optsDiv.innerHTML = '';
+            
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-3 rounded-lg border border-stone-300 bg-white hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors";
+                btn.innerHTML = `<span class="font-bold mr-2 text-stone-400">${String.fromCharCode(65+i)}</span> ${opt.t}`;
+                btn.onclick = () => checkAnswer(i, btn);
+                optsDiv.appendChild(btn);
+            });
+
+            // Nav buttons
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('next-btn').disabled = true; // Wait for answer
+            document.getElementById('next-btn').innerText = index === quizData.length - 1 ? "Bitir" : "Sonraki";
+        }
+
+        function toggleHint() {
+            document.getElementById('hint-box').classList.remove('hidden');
+            document.getElementById('hint-btn').style.display = 'none';
+        }
+
+        function checkAnswer(selectedOptIndex, btnElement) {
+            const q = quizData[currentQIndex];
+            const isCorrect = q.options[selectedOptIndex].c;
+            const feedbackDiv = document.getElementById('feedback-container');
+            const title = document.getElementById('feedback-title');
+            const text = document.getElementById('feedback-text');
+
+            // Disable all buttons
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                title.innerText = "Doğru!";
+                title.className = "font-bold mb-1 text-green-700";
+                feedbackDiv.className = "p-4 rounded-lg mb-6 border bg-green-50 border-green-200 block animate-fade-in";
+                score += 10;
+            } else {
+                btnElement.classList.add('wrong');
+                title.innerText = "Yanlış";
+                title.className = "font-bold mb-1 text-red-700";
+                feedbackDiv.className = "p-4 rounded-lg mb-6 border bg-red-50 border-red-200 block animate-fade-in";
+                
+                // Highlight correct one
+                q.options.forEach((opt, i) => {
+                    if(opt.c) buttons[i].classList.add('correct');
+                });
+            }
+
+            text.innerText = q.options[selectedOptIndex].r;
+            document.getElementById('score-counter').innerText = `Puan: ${score}`;
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function changeQuestion(dir) {
+            if (dir === 1 && currentQIndex === quizData.length - 1) {
+                alert(`Tebrikler! Testi tamamladınız.\nToplam Puanınız: ${score} / 100`);
+                currentQIndex = 0;
+                score = 0;
+            } else {
+                currentQIndex += dir;
+            }
+            loadQuestion(currentQIndex);
+        }
+
         // Initialize
         updateVectors();
         switchTab('nodal');
+        loadQuestion(0);
 
     </script>
 </body>
