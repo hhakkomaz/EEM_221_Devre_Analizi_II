@@ -14,8 +14,6 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- NOT: MathJax kaldırıldı. Artık formüller HTML/Unicode ile doğal olarak gösterilecek. -->
-
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -71,6 +69,24 @@
             background-color: #d6d3d1;
             border-radius: 3px;
         }
+
+        /* Quiz Styles */
+        .option-btn {
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #e7e5e4;
+        }
+        .option-btn.correct {
+            background-color: #dcfce7; /* Green-100 */
+            border-color: #22c55e; /* Green-500 */
+            color: #14532d;
+        }
+        .option-btn.wrong {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #ef4444; /* Red-500 */
+            color: #7f1d1d;
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 antialiased">
@@ -103,6 +119,13 @@
                 <span class="text-xs font-bold text-blue-400 block mb-1">1. HAFTA (Aktif)</span>
                 Sinüzoidler ve Fazör Kavramı
             </a>
+            <!-- Quiz Link -->
+            <a href="#quiz" onclick="toggleMenu()" class="block ml-4 p-2 rounded-lg text-sm text-stone-600 hover:text-blue-600 hover:bg-stone-100 transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                Çalışma Soruları (Quiz)
+            </a>
             
             <!-- Future Weeks Links -->
             <a href="hafta2.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
@@ -117,46 +140,7 @@
                 <span class="text-xs font-bold text-stone-400 block mb-1">4. HAFTA</span>
                 Güç Analizi II (Kompanzasyon)
             </a>
-            <a href="hafta5.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">5. HAFTA</span>
-                Dengeli Üç Fazlı Devreler
-            </a>
-            <a href="hafta6.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">6. HAFTA</span>
-                Üç Fazlı Sistemlerde Güç
-            </a>
-            <a href="hafta7.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">7. HAFTA</span>
-                Manyetik Kuplajlı Devreler
-            </a>
-            <a href="hafta8.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">8. HAFTA</span>
-                Transformatörler
-            </a>
-            <a href="hafta9.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">9. HAFTA</span>
-                Frekans Cevabı ve Rezonans
-            </a>
-            <a href="hafta10.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">10. HAFTA</span>
-                Pasif Filtreler
-            </a>
-            <a href="hafta11.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">11. HAFTA</span>
-                Bode Diyagramları
-            </a>
-            <a href="hafta12.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">12. HAFTA</span>
-                İki Kapılı Devreler
-            </a>
-            <a href="hafta13.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">13. HAFTA</span>
-                Laplace Dönüşümü - I
-            </a>
-            <a href="hafta14.html" class="block p-3 rounded-lg hover:bg-stone-100 text-stone-600 transition-colors border border-transparent hover:border-stone-200">
-                <span class="text-xs font-bold text-stone-400 block mb-1">14. HAFTA</span>
-                Laplace Dönüşümü - II
-            </a>
+            <!-- Diğer haftalar buraya eklenebilir -->
         </nav>
         <div class="p-4 border-t border-stone-200 bg-stone-50 text-xs text-stone-500 text-center">
             &copy; 2024 EEM 221
@@ -429,6 +413,67 @@
             </table>
         </section>
 
+        <!-- Quiz Section (Added New) -->
+        <section id="quiz" class="bg-white rounded-xl shadow-lg p-6 md:p-8 mt-12 mb-12">
+            <div class="flex items-center gap-3 mb-6 border-b border-stone-200 pb-4">
+                <div class="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-800">Çalışma Soruları</h2>
+                    <p class="text-sm text-stone-500">Konuyu ne kadar anladığınızı test edin.</p>
+                </div>
+            </div>
+
+            <div id="quiz-container" class="max-w-2xl mx-auto">
+                <!-- Progress -->
+                <div class="flex justify-between text-sm font-medium text-stone-500 mb-2">
+                    <span id="question-counter">Soru 1 / 10</span>
+                    <span id="score-counter">Puan: 0</span>
+                </div>
+                <div class="w-full bg-stone-200 rounded-full h-2 mb-6">
+                    <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="bg-stone-50 p-6 rounded-xl border border-stone-200 mb-6">
+                    <h3 id="question-text" class="text-lg font-bold text-stone-800 mb-4 leading-relaxed">
+                        <!-- Soru buraya gelecek -->
+                    </h3>
+                    
+                    <!-- Hint -->
+                    <div id="hint-box" class="hidden mb-4 p-3 bg-yellow-50 text-yellow-800 text-sm rounded border border-yellow-200">
+                        <span class="font-bold">İpucu:</span> <span id="hint-text"></span>
+                    </div>
+
+                    <!-- Options -->
+                    <div id="options-container" class="space-y-3">
+                        <!-- Şıklar buraya gelecek -->
+                    </div>
+                </div>
+
+                <!-- Feedback (Hidden by default) -->
+                <div id="feedback-container" class="hidden p-4 rounded-lg mb-6 border">
+                    <h4 id="feedback-title" class="font-bold mb-1"></h4>
+                    <p id="feedback-text" class="text-sm"></p>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex justify-between items-center">
+                    <button id="hint-btn" onclick="toggleHint()" class="text-sm text-yellow-600 hover:text-yellow-700 font-medium flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        İpucu Göster
+                    </button>
+                    <div class="flex gap-3">
+                        <button id="prev-btn" onclick="changeQuestion(-1)" class="px-4 py-2 text-stone-600 hover:bg-stone-100 rounded disabled:opacity-50" disabled>Önceki</button>
+                        <button id="next-btn" onclick="changeQuestion(1)" class="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-bold disabled:opacity-50">Sonraki</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="bg-stone-900 text-stone-400 py-8 mt-12 text-center">
@@ -502,8 +547,6 @@
             const phiRad = phiDeg * (Math.PI / 180);
             
             // Generate 2 cycles roughly based on w=1
-            // Total time T = 2pi/w. If w=1, T=6.28. Let's plot 0 to 12.
-            // Resolution needs to be high for smooth curves.
             for (let t = 0; t <= 12; t += 0.1) {
                 labels.push(t.toFixed(1));
                 points.push(Vm * Math.cos(w * t + phiRad));
@@ -583,7 +626,7 @@
                 statusEl.className = "p-4 rounded-lg bg-blue-50 border border-blue-200 text-center font-bold text-lg text-blue-800";
             }
 
-            // Generate Data (Fixed w=1, Vm=10 for V, Vm=8 for I)
+            // Generate Data
             const pointsV = [];
             const pointsI = [];
             const labels = [];
@@ -676,20 +719,20 @@
             'L': {
                 title: "Bobin (Inductor)",
                 color: "border-blue-500",
-                desc: "Bobinde değişim zordur. Türev (jω) işin içine girer. Voltaj, Akımdan 90° önde gider.",
+                desc: "Bobinde değişim zordur. Türev (j&omega;) işin içine girer. Voltaj, Akımdan 90° önde gider.",
                 timeEq: "v = L(di/dt)",
-                phasorEq: "V = jωL · I",
-                z: "Z = jωL",
+                phasorEq: "V = j&omega;L · I",
+                z: "Z = j&omega;L",
                 shift: "+90° (Voltaj Önde)",
                 vizAngle: 90
             },
             'C': {
                 title: "Kapasitör (Capacitor)",
                 color: "border-red-500",
-                desc: "Kapasitörde integral (1/jω) vardır. Bu da -j demektir. Voltaj, Akımdan 90° geride kalır.",
+                desc: "Kapasitörde integral (1/j&omega;) vardır. Bu da -j demektir. Voltaj, Akımdan 90° geride kalır.",
                 timeEq: "i = C(dv/dt)",
-                phasorEq: "V = I / (jωC)",
-                z: "Z = 1/(jωC) = -j/(ωC)",
+                phasorEq: "V = I / (j&omega;C)",
+                z: "Z = 1/(j&omega;C) = -j/(&omega;C)",
                 shift: "-90° (Voltaj Geride)",
                 vizAngle: -90
             }
@@ -711,11 +754,10 @@
             });
 
             // Content Injection
-            // Fixed: Replaced jω with j&omega;
             const html = `
                 <div class="space-y-4">
                     <h3 class="text-xl font-bold text-stone-800">${data.title}</h3>
-                    <p class="text-stone-600">${data.desc.replace('jω', 'j&omega;')}</p>
+                    <p class="text-stone-600">${data.desc}</p>
                     <div class="bg-stone-50 p-4 rounded border-l-4 ${data.color}">
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
@@ -724,11 +766,11 @@
                             </div>
                             <div>
                                 <span class="block text-stone-500 font-bold">Fazör:</span>
-                                <span class="font-mono text-stone-800">${data.phasorEq.replace('jω', 'j&omega;').replace('ωC', '&omega;C')}</span>
+                                <span class="font-mono text-stone-800">${data.phasorEq}</span>
                             </div>
                             <div class="col-span-2 mt-2 pt-2 border-t border-stone-200">
                                 <span class="block text-stone-500 font-bold">Empedans (Z):</span>
-                                <span class="font-mono text-lg font-bold text-blue-700">${data.z.replace('jω', 'j&omega;').replace('ωC', '&omega;C')}</span>
+                                <span class="font-mono text-lg font-bold text-blue-700">${data.z}</span>
                             </div>
                         </div>
                     </div>
@@ -762,11 +804,200 @@
             document.getElementById('component-content').innerHTML = html;
         }
 
-        // Initialize
+        // --- 5. Quiz Logic ---
+        const quizData = [
+            {
+                q: "Bir sinüzoidal gerilim kaynağının denklemi v(t) = 100 cos(314t + 30&deg;) olarak verilmiştir. Bu kaynağın frekansı (f) yaklaşık olarak kaç Hertz'dir?",
+                hint: "Açısal frekans &omega; = 2&pi;f formülünü hatırlayın.",
+                options: [
+                    { t: "314 Hz", r: "Bu değer açısal frekanstır (&omega;), frekans (f) değildir.", c: false },
+                    { t: "60 Hz", r: "314 / (2&pi;) işlemi 60 sonucunu vermez.", c: false },
+                    { t: "50 Hz", r: "Doğru. &omega; = 314 rad/s ise, f = 314 / (2&pi;) &approx; 50 Hz bulunur.", c: true },
+                    { t: "100 Hz", r: "Bu değer gerilimin genliğidir (Vm), frekans değildir.", c: false }
+                ]
+            },
+            {
+                q: "i(t) = 5 sin(&omega;t) sinyalinin fazör gösterimi aşağıdakilerden hangisidir? (Referans: cos)",
+                hint: "Sinüs fonksiyonu, Kosinüs fonksiyonunun 90 derece gerisinden gelir.",
+                options: [
+                    { t: "5 &angle; 0&deg;", r: "Bu, 5cos(&omega;t) sinyalinin fazörüdür.", c: false },
+                    { t: "5 &angle; 90&deg;", r: "Yanlış. Sinüs kosinüse çevrilirken açıdan 90 çıkarılır.", c: false },
+                    { t: "5 &angle; -90&deg;", r: "Doğru. sin(&omega;t) = cos(&omega;t - 90&deg;).", c: true },
+                    { t: "5 &angle; 180&deg;", r: "Bu -5cos(&omega;t) sinyaline karşılık gelir.", c: false }
+                ]
+            },
+            {
+                q: "Voltaj v(t) = 10 cos(100t + 30&deg;) ve akım i(t) = 2 cos(100t - 15&deg;) ise, faz ilişkisi nasıldır?",
+                hint: "Faz açılarını karşılaştırın. Pozitif olan (veya daha büyük olan) öndedir.",
+                options: [
+                    { t: "Voltaj, akımdan 45 derece ileridedir.", r: "Doğru. 30&deg; - (-15&deg;) = 45&deg; fark vardır.", c: true },
+                    { t: "Akım, voltajdan 45 derece ileridedir.", r: "Yanlış. Akımın açısı (-15) daha küçüktür.", c: false },
+                    { t: "Voltaj, akımdan 15 derece ileridedir.", r: "İşaretlere dikkat edin: 30 - 15 değil, 30 - (-15).", c: false },
+                    { t: "Aynı fazdadırlar.", r: "Açıları farklı olduğu için aynı fazda olamazlar.", c: false }
+                ]
+            },
+            {
+                q: "z = 3 + j4 karmaşık sayısının kutupsal (polar) formu nedir?",
+                hint: "Genlik r = &radic;(3&sup2; + 4&sup2;) ve açı &theta; = tan&sup-1;(4/3).",
+                options: [
+                    { t: "7 &angle; 53.1&deg;", r: "Genlik için bileşenler toplanmaz, kareleri toplanıp kökü alınır.", c: false },
+                    { t: "5 &angle; 36.9&deg;", r: "Açı tan&sup-1;(3/4) değil tan&sup-1;(4/3) olmalıdır.", c: false },
+                    { t: "5 &angle; 53.1&deg;", r: "Doğru. Genlik 5, açı yaklaşık 53.1&deg;.", c: true },
+                    { t: "5 &angle; 45&deg;", r: "Reel ve sanal kısımlar eşit olmadığından açı 45&deg; olamaz.", c: false }
+                ]
+            },
+            {
+                q: "Fazör domeninde türev alma işlemi, zaman domenindeki fonksiyonu ne ile çarpmaya karşılık gelir?",
+                hint: "e^(j&omega;t) fonksiyonunun türevini düşünün.",
+                options: [
+                    { t: "&omega;", r: "Sadece &omega; değil, j çarpanı da gelmelidir (90&deg; dönüş).", c: false },
+                    { t: "j&omega;", r: "Doğru. Türev almak j&omega; ile çarpmak demektir.", c: true },
+                    { t: "1 / (j&omega;)", r: "Bu integral alma işlemine karşılık gelir.", c: false },
+                    { t: "-j&omega;", r: "Türev işleminde işaret değişmez.", c: false }
+                ]
+            },
+            {
+                q: "L = 20 mH ve &omega; = 1000 rad/s ise bobinin empedansı (ZL) nedir?",
+                hint: "ZL = j&omega;L formülünü kullanın. mH'yi H'ye çevirmeyi unutmayın.",
+                options: [
+                    { t: "20 &Omega;", r: "Empedans karmaşık bir sayıdır, 'j' olmalıdır.", c: false },
+                    { t: "j200 &Omega;", r: "Hesap hatası: 1000 * 0.02 = 20 eder.", c: false },
+                    { t: "j20 &Omega;", r: "Doğru. j * 1000 * 0.020 = j20 &Omega;.", c: true },
+                    { t: "-j20 &Omega;", r: "Bobin pozitiftir, kapasitör negatiftir.", c: false }
+                ]
+            },
+            {
+                q: "DC kaynaklı bir devrede (f=0), ideal bir kondansatör nasıl davranır?",
+                hint: "ZC = 1 / (j&omega;C) formülünde &omega; = 0 koyun.",
+                options: [
+                    { t: "Kısa Devre (Tel)", r: "Bu bobin için geçerlidir (ZL=0).", c: false },
+                    { t: "Açık Devre (Akım yok)", r: "Doğru. Empedans sonsuza gider, akımı keser.", c: true },
+                    { t: "Direnç gibi", r: "Sabit bir direnç değeri göstermez.", c: false },
+                    { t: "Gerilim kaynağı gibi", r: "Pasif elemandır, kaynak olamaz.", c: false }
+                ]
+            },
+            {
+                q: "Sadece direnç (R) içeren bir devrede faz farkı nedir?",
+                hint: "Direncin empedansı ZR = R (Reel sayı).",
+                options: [
+                    { t: "Akım 90&deg; ileridedir", r: "Kapasitif devre özelliğidir.", c: false },
+                    { t: "Gerilim 90&deg; ileridedir", r: "Endüktif devre özelliğidir.", c: false },
+                    { t: "Faz farkı yoktur", r: "Doğru. Direnç faz farkı yaratmaz.", c: true },
+                    { t: "Akım 180&deg; geridedir", r: "Yanlış.", c: false }
+                ]
+            },
+            {
+                q: "i(t) = -10 cos(50t) akımının fazörü nedir?",
+                hint: "Negatif işareti yok etmek için açıya 180&deg; ekleyin.",
+                options: [
+                    { t: "10 &angle; 0&deg;", r: "Negatif işaret dikkate alınmamış.", c: false },
+                    { t: "10 &angle; 180&deg;", r: "Doğru. -cos(x) = cos(x + 180&deg;).", c: true },
+                    { t: "10 &angle; 90&deg;", r: "Yanlış dönüşüm.", c: false },
+                    { t: "-10 &angle; 90&deg;", r: "Standart fazör gösteriminde genlik pozitif olmalıdır.", c: false }
+                ]
+            },
+            {
+                q: "Kapasitif bir devrede (C) akım ve gerilim ilişkisi nasıldır?",
+                hint: "ZC = -j / (&omega;C). -j demek -90&deg; (Voltaj/Akım).",
+                options: [
+                    { t: "Gerilim, akımdan 90&deg; ileridedir", r: "Bobin (L) özelliğidir.", c: false },
+                    { t: "Akım, gerilimden 90&deg; ileridedir", r: "Doğru. Kapasitörde akım öndedir (ICE).", c: true },
+                    { t: "Aynı fazdadır", r: "Direnç özelliğidir.", c: false },
+                    { t: "Akım 90&deg; geridedir", r: "Bobin özelliğidir.", c: false }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+
+        function loadQuestion(index) {
+            const q = quizData[index];
+            document.getElementById('question-text').innerHTML = q.q;
+            document.getElementById('hint-text').innerHTML = q.hint;
+            document.getElementById('question-counter').innerText = `Soru ${index + 1} / ${quizData.length}`;
+            document.getElementById('score-counter').innerText = `Puan: ${score}`;
+            document.getElementById('progress-bar').style.width = `${((index + 1) / quizData.length) * 100}%`;
+            
+            // Reset UI
+            document.getElementById('hint-box').classList.add('hidden');
+            document.getElementById('feedback-container').classList.add('hidden');
+            document.getElementById('hint-btn').style.display = 'flex';
+            
+            // Options
+            const optsDiv = document.getElementById('options-container');
+            optsDiv.innerHTML = '';
+            
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-3 rounded-lg border border-stone-300 bg-white hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors";
+                btn.innerHTML = `<span class="font-bold mr-2 text-stone-400">${String.fromCharCode(65+i)}</span> ${opt.t}`;
+                btn.onclick = () => checkAnswer(i, btn);
+                optsDiv.appendChild(btn);
+            });
+
+            // Nav buttons
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('next-btn').disabled = true; // Wait for answer
+            document.getElementById('next-btn').innerText = index === quizData.length - 1 ? "Bitir" : "Sonraki";
+        }
+
+        function toggleHint() {
+            document.getElementById('hint-box').classList.remove('hidden');
+            document.getElementById('hint-btn').style.display = 'none';
+        }
+
+        function checkAnswer(selectedOptIndex, btnElement) {
+            const q = quizData[currentQIndex];
+            const isCorrect = q.options[selectedOptIndex].c;
+            const feedbackDiv = document.getElementById('feedback-container');
+            const title = document.getElementById('feedback-title');
+            const text = document.getElementById('feedback-text');
+
+            // Disable all buttons
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                title.innerText = "Doğru!";
+                title.className = "font-bold mb-1 text-green-700";
+                feedbackDiv.className = "p-4 rounded-lg mb-6 border bg-green-50 border-green-200 block animate-fade-in";
+                score += 10;
+            } else {
+                btnElement.classList.add('wrong');
+                title.innerText = "Yanlış";
+                title.className = "font-bold mb-1 text-red-700";
+                feedbackDiv.className = "p-4 rounded-lg mb-6 border bg-red-50 border-red-200 block animate-fade-in";
+                
+                // Highlight correct one
+                q.options.forEach((opt, i) => {
+                    if(opt.c) buttons[i].classList.add('correct');
+                });
+            }
+
+            text.innerText = q.options[selectedOptIndex].r;
+            document.getElementById('score-counter').innerText = `Puan: ${score}`;
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function changeQuestion(dir) {
+            if (dir === 1 && currentQIndex === quizData.length - 1) {
+                alert(`Tebrikler! Testi tamamladınız.\nToplam Puanınız: ${score} / 100`);
+                currentQIndex = 0;
+                score = 0;
+            } else {
+                currentQIndex += dir;
+            }
+            loadQuestion(currentQIndex);
+        }
+
+        // Initialize All
         updateSinusoid();
         updateLeadLag();
         updatePhasorDiagram();
         switchComponent('R'); // Default
+        loadQuestion(0);
 
     </script>
     
